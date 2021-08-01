@@ -14,12 +14,22 @@ for (const val of inputArr) {
   }
 }
 //if both -n & -b exist
-
-if(optionsArr.includes("-n") && optionsArr.includes("-b")){
-  console.log("either enter -n or -b option");
-  return;
+let finalOption = "";
+if (optionsArr.includes("-n") && optionsArr.includes("-b")) {
+  if (optionsArr.indexOf("-n") < optionsArr.indexOf("-b")) {
+    finalOption = "-n";
+  } else {
+    finalOption = "-b";
+  }
+} else {
+  if (optionsArr.includes("-n")) {
+    finalOption = "-n";
+  } else if (optionsArr.includes("-b")) {
+    finalOption = "-b";
+  }
 }
-// 
+//console.log(finalOption);
+
 //file exist
 for (const filepath of filesArr) {
   let exist = fs.existsSync(filepath);
@@ -32,36 +42,34 @@ for (const filepath of filesArr) {
 //printing file content
 let content;
 for (const filepath of filesArr) {
-   content =  content + fs.readFileSync(filepath, "utf-8") + "\r\n";
+  content = content + fs.readFileSync(filepath, "utf-8") + "\r\n";
 }
 let contentArr = content.split("\r\n");
 
-
 // -s
-if(optionsArr.includes("-s")){
-let tempArr=[];
-for (let i = 0; i < contentArr.length; i++) {
-  if(contentArr[i]=="" && contentArr[i+1]==""){
-    continue;
-  }else{
-    tempArr.push(contentArr[i]);
+if (optionsArr.includes("-s")) {
+  let tempArr = [];
+  for (let i = 0; i < contentArr.length; i++) {
+    if (contentArr[i] == "" && contentArr[i + 1] == "") {
+      continue;
+    } else {
+      tempArr.push(contentArr[i]);
+    }
   }
+  contentArr = tempArr;
 }
-contentArr=tempArr;
-}
-
 // -n
-if(optionsArr.includes("-n")){
-  for (let i=0; i<contentArr.length;i++) {
-    contentArr[i] = `${i+1} ${contentArr[i]}`;
+if (finalOption == "-n") {
+  for (let i = 0; i < contentArr.length; i++) {
+    contentArr[i] = `${i + 1} ${contentArr[i]}`;
   }
 }
 
 // -b
-if(optionsArr.includes("-b")){
-  let count=1;
+if (finalOption == "-b") {
+  let count = 1;
   for (let i = 0; i < contentArr.length; i++) {
-    if(contentArr[i]!= ""){
+    if (contentArr[i] != "") {
       contentArr[i] = `${count} ${contentArr[i]}`;
       count++;
     }
